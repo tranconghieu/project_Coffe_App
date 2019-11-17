@@ -1,0 +1,393 @@
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, Dimensions, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { Header } from 'react-native-elements';
+
+import global from '../../../global';
+import Lightbox from 'react-native-lightbox';
+const back = require('../../../images-master/appIcon/back.png');
+const cart = require('../../../images-master/appIcon/cartfull.png');
+const url = 'http://hieu.zanluv.com/api/images/product/';
+export default class ProductDetail extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+    }
+  }
+  addThisProductToCart() {
+    const { navigation } = this.props;
+    const product = navigation.getParam('product');
+    global.addProductToCart(product);
+    //console.log('this is prodct detail');
+
+  }
+  openModal() {
+    this.setState({ modalVisible: true });
+  }
+
+  closeModal() {
+    this.setState({ modalVisible: false });
+  }
+  render() {
+
+    const { navigation } = this.props;
+    const product = navigation.getParam('product');
+    const { id, name, idType, nameType, price, color, material, description, images } = product;
+    const {
+      closeModal, opentModal,
+      wrapper, header, ViewProduct, Material,
+      footer, backstyle, contentProduct, ImageStyle, descriptions
+      , cartstyle, textBlack, titleProduct,
+      textSmoke, textHighlight, descStyle, txtMaterial, txtColor
+    } = styles;
+    return (
+      <View style={wrapper}>
+        <View style={ViewProduct}>
+
+          <Modal
+            transparent={true} 
+            visible={this.state.modalVisible}
+            animationType={'slide'}
+            onRequestClose={() => this.closeModal()}
+
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.innerContainer}>
+                <View>
+                  <Text>{description}</Text>
+                </View>
+                <View>
+                  <TouchableOpacity onPress={() => this.closeModal()}
+                    style={closeModal}
+                  >
+                    <Text style={{ color: 'white' }}>Close description</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+          <View style={header}>
+            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+              <Image style={backstyle} source={back} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.addThisProductToCart.bind(this)}>
+              <Image style={cartstyle} source={cart} />
+            </TouchableOpacity>
+
+          </View>
+          <View style={contentProduct} >
+            <ScrollView horizontal style={{
+              flexDirection: 'row', padding: 10,
+            }} >
+              <Lightbox style = {{ flex :1}}>
+              <View style = {{ justifyContent: 'center',alignItems:'center' , padding:0}} >
+                <Image source={{ uri: ${url}${images[0]} }}  style={ImageStyle} />
+                </View>
+              </Lightbox>
+              <Lightbox style = {{ flex :1}}>
+              <View style = {{ justifyContent: 'center',alignItems:'center' , padding:0}} >
+              <Image source={{ uri: ${url}${images[1]} }} style={ImageStyle} />
+                </View>
+              </Lightbox>
+              
+
+            </ScrollView>
+          </View>
+          <View style={footer}>
+            <View style={titleProduct}>
+              <Text style={textBlack}>{name.toUpperCase()}</Text>
+              <Text style={textHighlight}> / </Text>
+              <Text style={textSmoke}>{price}$</Text>
+            </View>
+            <View style={descriptions} >
+              <ScrollView>
+                <Text style={descStyle}>{description}</Text>
+              </ScrollView>
+              <TouchableOpacity
+                style={opentModal}
+                onPress={() => this.openModal()}><Text>Read more ..</Text></TouchableOpacity>
+            </View>
+            <View style={Material} >
+              <Text style={txtMaterial}>Material {material}</Text>
+              <View style={{ flexDirection: 'row' }} >
+                <Text style={txtColor}>Color {color}</Text>
+                <View style={{ height: 15, width: 15, marginTop: 5, backgroundColor: ${color}.toLowerCase(), borderRadius: 15, marginLeft: 10, borderWidth: 1, borderColor: '#C21C70' }} />
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+const { width, height } = Dimensions.get('window');
+const swiperWidth = (width / 1.😎 - 30;
+const swiperHeight = (swiperWidth * 452) / 361;
+
+const styles = StyleSheet.create({
+  opentModal: {
+    width: (width / 2) - 50
+  },
+  closeModal: {
+    alignItems: 'center',
+    marginTop: 10,
+    backgroundColor: '#34B089',
+    borderRadius: 3,
+    paddingVertical: 5
+  },
+  modalContainer: {
+    borderRadius: 3,
+    padding: 20,
+    marginTop: 80,
+    marginLeft: 25,
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    width: width - 50,
+    borderWidth : 2,
+    borderColor: '#34B089'
+
+  },
+  // innerContainer: {
+  //   alignItems: 'center',
+  // },
+  txtMaterial: {
+    color: '#B10D65',
+    fontSize: 17,
+
+  },
+  txtColor: {
+    color: '#B10D65',
+    fontSize: 17,
+  },
+  descriptions: {
+    flex: 60,
+    padding: 15,
+    borderTopWidth: 1,
+    borderColor: '#F6F6F6',
+    marginBottom: 10
+  },
+  descStyle: {
+    fontSize: width / 18,
+    alignItems: 'center',
+    color: '#AFAFAF'
+  },
+  textBlack: {
+    fontWeight: 'bold',
+    fontSize: width / 20,
+    fontFamily: 'Avenir',
+    paddingHorizontal: 17,
+    color: 'black'
+  },
+  textHighlight: {
+    fontSize: 20,
+    fontFamily: 'Avenir',
+
+    color: '#666'
+  },
+  textSmoke: {
+    fontSize: width / 20,
+    fontFamily: 'Avenir',
+    marginLeft: 10,
+    color: '#666'
+  },
+  Material: {
+    padding: 15,
+    flex: 20,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderColor: '#F6F6F6',
+
+  },
+  titleProduct: {
+    flex: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10
+  },
+  ImageStyle: {
+    height: swiperHeight,
+    width: (width / 2) - 25,
+    marginRight: 10
+  },
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#D6D6D6',
+    padding: 10,
+  },
+  ViewProduct: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 5,
+    paddingHorizontal: 15,
+    paddingTop: 20,
+    alignItems: 'center'
+
+  },
+  footer: {
+    flex: 40
+  },
+  contentProduct: {
+    flex: 55,
+    alignItems: 'center',
+    flexDirection: 'row',
+
+
+  },
+  backstyle: {
+    width: 25,
+    height: 25
+  },
+  cartstyle: {
+    width: 25,
+    height: 25
+  },
+  btn: {
+    margin: 10,
+    backgroundColor: "#3B5998",
+    color: "white",
+    padding: 10
+  },
+
+});
+
+// cardStyle: {
+//   flex: 1,
+//   backgroundColor: '#FFFFFF',
+//   borderRadius: 5,
+//   marginHorizontal: 10,
+//   marginVertical: 10
+// },
+// header: {
+//   flexDirection: 'row',
+//   justifyContent: 'space-between',
+//   flex: 1,
+//   paddingHorizontal: 15,
+//   paddingTop: 20
+// },
+// cartStyle: {
+//   width: 25,
+//   height: 25
+// },
+// backStyle: {
+//   width: 25,
+//   height: 25
+// },
+// productStyle: {
+//   width: width / 2,
+//   height: width / 2
+// },
+// footer: {
+//   flex: 6
+// },
+// imageContainer: {
+//   flex: 6,
+//   alignItems: 'center',
+//   flexDirection: 'row',
+//   marginHorizontal: 10
+// },
+// textMain: {
+//   paddingLeft: 20,
+//   marginVertical: 10
+// },
+// textBlack: {
+//   fontFamily: 'Avenir',
+//   fontSize: 20,
+//   fontWeight: 'bold',
+//   color: '#3F3F46'
+// },
+// textSmoke: {
+//   fontFamily: 'Avenir',
+//   fontSize: 20,
+//   color: '#9A9A9A'
+// },
+// textHighlight: {
+//   fontFamily: 'Avenir',
+//   fontSize: 20,
+//   color: '#7D59C8'
+// },
+// titleContainer: {
+//   borderBottomWidth: 1,
+//   borderColor: '#F6F6F6',
+//   marginHorizontal: 20,
+//   paddingBottom: 5
+// },
+// descContainer: {
+//   margin: 10,
+//   paddingTop: 10,
+//   paddingHorizontal: 10
+// },
+// descStyle: {
+//   color: '#AFAFAF'
+// },
+// linkStyle: {
+//   color: '#7D59C8'
+// },
+// productImageStyle: {
+//   width: swiperWidth,
+//   height: swiperHeight,
+//   marginHorizontal: 5
+// },
+// mainRight: {
+//   justifyContent: 'space-between',
+//   alignSelf: 'stretch',
+//   paddingLeft: 20
+// },
+// txtColor: {
+//   color: '#C21C70',
+//   fontSize: 15,
+//   fontWeight: '400',
+//   fontFamily: 'Avenir'
+// },
+// txtMaterial: {
+//   color: '#C21C70',
+//   fontSize: 15,
+//   fontWeight: '400',
+//   fontFamily: 'Avenir'
+// }
+// <Text >ProductDetail!</Text>
+// <TouchableOpacity onPress={() => this.props.navigation.goBack()} >
+//     <Text >go back </Text>
+//   </TouchableOpacity>
+/* <View style={cardStyle}>
+          <View style={header}>
+            <TouchableOpacity >
+              <Image style={backStyle} source={back} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image style={cartStyle} source={cart} />
+            </TouchableOpacity>
+          </View>
+          <View style={imageContainer}>
+            <ScrollView style={{ flexDirection: 'row', padding: 10, height: swiperHeight }} horizontal >
+              <Image source={img1} style={productImageStyle} />
+              <Image source={img2} style={productImageStyle} />
+            </ScrollView>
+          </View>
+          <View style={footer}>
+            <View style={titleContainer}>
+              <Text style={textMain}>
+                <Text style={textBlack}>{'back of the'.toUpperCase()}</Text>
+                <Text style={textHighlight}> / </Text>
+                <Text style={textSmoke}>100$</Text>
+              </Text>
+            </View>
+            <View style={descContainer}>
+
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 15 }}>
+                <Text style={txtMaterial}>Material Fur</Text>
+                <View style={{ flexDirection: 'row' }} >
+                  <Text style={txtColor}>Color Black</Text>
+                  <View style={{ height: 15, width: 15, backgroundColor: 'black'.toLowerCase(), borderRadius: 15, marginLeft: 10, borderWidth: 1, borderColor: '#C21C70' }} />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View> */
